@@ -65,6 +65,7 @@
             txtBox_Single.Name = "txtBox_Single";
             txtBox_Single.Size = new Size(376, 23);
             txtBox_Single.TabIndex = 1;
+            txtBox_Single.KeyPress += txtBox_Single_KeyPress;
             // 
             // btnRun_Single
             // 
@@ -103,6 +104,7 @@
             pictureBox1.Size = new Size(861, 672);
             pictureBox1.TabIndex = 5;
             pictureBox1.TabStop = false;
+            pictureBox1.Paint += pictureBox1_Paint;
             // 
             // btnClear_Program
             // 
@@ -182,14 +184,14 @@
             // saveToolStripMenuItem
             // 
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new Size(180, 22);
+            saveToolStripMenuItem.Size = new Size(100, 22);
             saveToolStripMenuItem.Text = "Save";
             saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
             // 
             // loadToolStripMenuItem
             // 
             loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            loadToolStripMenuItem.Size = new Size(180, 22);
+            loadToolStripMenuItem.Size = new Size(100, 22);
             loadToolStripMenuItem.Text = "Load";
             loadToolStripMenuItem.Click += loadToolStripMenuItem_Click;
             // 
