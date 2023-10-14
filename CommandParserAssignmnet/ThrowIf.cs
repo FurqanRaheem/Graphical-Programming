@@ -6,7 +6,7 @@ namespace CommandParserAssignmnet
     /// <summary>
     /// Contains methods for throwing exceptions.
     /// </summary>
-    internal static class ThrowIf
+    public static class ThrowIf
     {
         /// <summary>
         /// Contains methods for argument validation.
