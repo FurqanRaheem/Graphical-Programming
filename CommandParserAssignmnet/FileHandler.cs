@@ -5,6 +5,12 @@ using System.Windows.Forms;
 namespace CommandParserAssignmnet;
 public class FileHandler
 {
+
+    /// <summary>
+    /// Saves the specified content to a file. Shows a SaveFileDialog to allow the user to choose the file location and name.
+    /// </summary>
+    /// <param name="content">The text or content to be saved to the file.</param>
+    /// <returns>True if the save operation is successful, false otherwise.</returns>
     public bool SaveToFile(string content)
     {
         using (SaveFileDialog saveFileDialog = new SaveFileDialog())
@@ -32,6 +38,10 @@ public class FileHandler
         return false; // Dialog was canceled
     }
 
+    /// <summary>
+    /// Loads content from a file. Shows an OpenFileDialog to allow the user to choose a file to open.
+    /// </summary>
+    /// <returns>The loaded text as a string if the load operation is successful, or null if there's an error or if the user cancels the dialog.</returns>
     public string? LoadFromFile()
     {
         using (OpenFileDialog openFileDialog = new OpenFileDialog())
