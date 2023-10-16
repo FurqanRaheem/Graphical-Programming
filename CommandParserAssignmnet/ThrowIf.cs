@@ -153,6 +153,21 @@ namespace CommandParserAssignmnet
             }
 
             /// <summary>
+            /// Verifies that the specified argument is a valid colour name. Matches against the KnownColor enum.
+            /// </summary>
+            /// <param name="argument"></param>
+            /// <param name="argumentName"></param>
+            /// <param name="methodName"></param>
+            /// <exception cref="ArgumentException"></exception>
+            public static void InvalidColour(string argument, string argumentName, string methodName)
+            {
+                if (!Enum.GetNames(typeof(KnownColor)).Any(c => c.Equals(argument, StringComparison.OrdinalIgnoreCase)))
+                {
+                    throw new ArgumentException($"The method '{methodName}' expects '{argumentName}' to be a valid colour name.", methodName);
+                }
+            }
+
+            /// <summary>
             /// Wrapper for the argument validation methods. 
             /// </summary>
             /// <param name="arguments"></param>
@@ -202,9 +217,24 @@ namespace CommandParserAssignmnet
 
                     if(argumentType == typeof(string))
                     {
+                        ThrowIf.Argument.EnsureArgumentType(argumentValue, argumentType, argumentName, methodName);
                         ThrowIf.Argument.IsStringEmpty((string)argumentValue, argumentName, methodName);
                     }
 
+                    if(argumentType == typeof(Color))
+                    {
+                        ThrowIf.Argument.InvalidColour(argumentValue.ToString(), argumentName, methodName);
+                    }
+
+                    if(argumentType == typeof(bool))
+                    {
+                        bool argumentBoolValue;
+
+                        if(!bool.TryParse(argumentValue.ToString(), out argumentBoolValue))
+                        {
+                            throw new ArgumentException($"The method '{methodName}' expects '{argumentName}' to be of type {argumentType.Name}.", methodName);
+                        }
+                    }
                 }
             }
         }
