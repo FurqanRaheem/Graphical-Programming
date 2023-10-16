@@ -6,18 +6,31 @@ using System.Threading.Tasks;
 
 namespace CommandParserAssignmnet
 {
-    public class Parser: Command
+    public class Parser
     {
+        private Command command;
         private Dictionary<string, Action<string[]>> commandDictionary;
 
-        public Parser()
+        public Parser(GraphicsHandler graphicsHandler)
         {
-            commandDictionary = new Dictionary<string, Action<string[]>>(StringComparer.OrdinalIgnoreCase);
+            this.command = new Command(graphicsHandler);
 
-            commandDictionary["moveTo"] = MoveTo;
-            commandDictionary["drawTo"] = DrawTo;
-            commandDictionary["clear"] = Clear;
-            commandDictionary["reset"] = Reset;
+            // Create a dictionary of commands and their corresponding methods
+            commandDictionary = new Dictionary<string, Action<string[]>>(StringComparer.OrdinalIgnoreCase);
+            SetCommandDictionary();
+        }
+
+        /// <summary>
+        /// Populates the command dictionary with the commands and their corresponding methods.
+        /// </summary>
+        private void SetCommandDictionary()
+        {
+            commandDictionary["moveTo"] = command.MoveTo;
+            commandDictionary["drawTo"] = command.DrawTo;
+            commandDictionary["clear"] = command.Clear;
+            commandDictionary["reset"] = command.Reset;
+            commandDictionary["pen"] = command.Pen;
+            commandDictionary["fill"] = command.Fill;
         }
 
         public void ParseProgram(string programText)
@@ -36,43 +49,19 @@ namespace CommandParserAssignmnet
 
             if (parts.Length == 0)
             {
-                Console.WriteLine("Invalid command. Please enter a valid command.");
-                return;
+                throw new ArgumentException("No command entered.");
             }
 
             string commandName = parts[0];
             if (commandDictionary.ContainsKey(commandName))
             {
-                string[] parameters = new string[parts.Length - 1];
-                Array.Copy(parts, 1, parameters, 0, parameters.Length);
-
+                string[] parameters = parts.Length > 1 ? parts[1].Split(',') : Array.Empty<string>();
                 commandDictionary[commandName](parameters);
             }
             else
-            {
-                Console.WriteLine($"Command '{commandName}' not recognized. Type 'help' for a list of commands.");
+            { 
+                throw new ArgumentException($"Command '{commandName}' not recognized. Type 'help' for a list of commands.");
             }
-        }
-
-
-        private void MoveTo(string[] parameters)
-        {
-            
-        }
-
-        private void DrawTo(string[] parameters)
-        {
-            
-        }
-
-        private void Clear(string[] parameters)
-        {
-           
-        }
-
-        private void Reset(string[] parameters)
-        {
-            
         }
     }
 }
