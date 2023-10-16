@@ -2,13 +2,34 @@ namespace CommandParserAssignmnet
 {
     public partial class Form1 : Form
     {
-        Parser parser;
         FileHandler fileHandler;
+        GraphicsHandler graphicsHandler;
+        Parser parser;
+
         public Form1()
         {
             InitializeComponent();
-            this.parser = new Parser();
-            this.fileHandler = new FileHandler();
+
+            // Initialise global variables
+            Globals.pictureBoxWidth = pictureBox1.Width;
+            Globals.pictureBoxHeight = pictureBox1.Height;
+            Globals.pictureBoxColor = pictureBox1.BackColor;
+
+            fileHandler = new FileHandler();
+            graphicsHandler = new GraphicsHandler();
+            parser = new Parser(graphicsHandler);
+        }
+
+        private void txtBox_Single_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if(e.KeyChar == (char)Keys.Enter)
+            {
+                string command = txtBox_Single.Text.Trim();
+
+                parser.ParseLine(command);
+
+                Refresh();
+            }
         }
 
         private void btnRun_Single_Click(object sender, EventArgs e)
@@ -16,11 +37,17 @@ namespace CommandParserAssignmnet
             string command = txtBox_Single.Text.Trim();
 
             parser.ParseLine(command);
+
+            Refresh();
         }
 
         private void btnRun_Program_Click(object sender, EventArgs e)
         {
+            string programText = txtBox_Program.Text;
 
+            parser.ParseProgram(programText);
+            
+            Refresh();
         }
 
         private void btnClear_Single_Click(object sender, EventArgs e)
@@ -52,7 +79,7 @@ namespace CommandParserAssignmnet
         {
             string? loadedText = fileHandler.LoadFromFile();
 
-            if(loadedText != string.Empty || loadedText == null)
+            if (loadedText != string.Empty || loadedText == null)
             {
                 txtBox_Program.Text = loadedText;
                 MessageBox.Show("File loaded successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -61,6 +88,13 @@ namespace CommandParserAssignmnet
             {
                 MessageBox.Show("Error loading file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+
+            g.DrawImage(graphicsHandler.getBitmap(), 0, 0);
         }
     }
 }
