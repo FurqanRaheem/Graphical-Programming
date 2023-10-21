@@ -17,7 +17,7 @@ namespace CommandParserAssignmnet
 
             fileHandler = new FileHandler();
             graphicsHandler = new GraphicsHandler();
-            parser = new Parser(graphicsHandler);
+            parser = new Parser(graphicsHandler, this);
         }
 
         private void txtBox_Single_KeyPress(object sender, KeyPressEventArgs e)
@@ -25,10 +25,7 @@ namespace CommandParserAssignmnet
             if(e.KeyChar == (char)Keys.Enter)
             {
                 string command = txtBox_Single.Text.Trim();
-
-                parser.ParseLine(command);
-
-                Refresh();
+                ExecuteCommand(command);
             }
         }
 
@@ -36,9 +33,22 @@ namespace CommandParserAssignmnet
         {
             string command = txtBox_Single.Text.Trim();
 
-            parser.ParseLine(command);
+            ExecuteCommand(command);
+        }
 
-            Refresh();
+        private void ExecuteCommand(string command)
+        {
+            // Hacky way of doing it, but I don't want to write any more code for this assignment
+            if (command.Equals("run", StringComparison.OrdinalIgnoreCase))
+            {
+                // Trigger btnRun_Program_Click
+                btnRun_Program.PerformClick();
+            }
+            else
+            {
+                parser.ParseLine(command);
+                Refresh();
+            }
         }
 
         private void btnRun_Program_Click(object sender, EventArgs e)
@@ -46,8 +56,6 @@ namespace CommandParserAssignmnet
             string programText = txtBox_Program.Text;
 
             parser.ParseProgram(programText);
-            
-            Refresh();
         }
 
         private void btnClear_Single_Click(object sender, EventArgs e)
