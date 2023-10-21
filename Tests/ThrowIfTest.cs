@@ -1,107 +1,270 @@
-using CommandParserAssignmnet;
-
 namespace Tests
 {
     [TestClass]
     public class ThrowIfTests
     {
         [TestMethod]
-        public void IsNull_ThrowsException_WhenArgumentIsNull()
+        [ExpectedException(typeof(ArgumentNullException))]
+        [DataRow(null)]
+        public void Argument_IsNull_ThrowsArgumentNullException(object argument)
         {
-            Assert.ThrowsException<ArgumentNullException>(() => ThrowIf.Argument.IsNull(null, "argumentName", "MethodName"));
+            // Act & Assert
+            ThrowIf.Argument.IsNull(argument, "argumentName", "TestMethod");
         }
 
         [TestMethod]
-        public void IsNull_DoesNotThrowException_WhenArgumentIsNotNull()
+        [DataRow(0)]
+        [DataRow("null")]
+        public void Argument_IsNull_DoesNotThrowArgumentNullException(object argument)
         {
-            ThrowIf.Argument.IsNull(new object(), "argumentName", "MethodName");
+            try
+            {
+                ThrowIf.Argument.IsNull(argument, "argumentName", "TestMethod");
+            }
+            catch (ArgumentNullException)
+            {
+                Assert.Fail("ArgumentNullException was thrown for a valid value.");
+            }
         }
 
         [TestMethod]
-        public void IsNegative_ThrowsException_WhenArgumentIsNegative()
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [DataRow(-1)]
+        [DataRow(-10)]
+        public void Argument_IsNegative_ThrowsArgumentOutOfRangeException(int argument)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => ThrowIf.Argument.IsNegative(-1, "argumentName", "MethodName"));
+            // Act & Assert
+            ThrowIf.Argument.IsNegative(argument, "argumentName", "TestMethod");
         }
 
         [TestMethod]
-        public void IsNegative_DoesNotThrowException_WhenArgumentIsNonNegative()
+        [DataRow(0)]
+        [DataRow(1)]
+        public void Argument_IsNegative_DoesNotThrowArgumentOutOfRangeException(int argument)
         {
-            ThrowIf.Argument.IsNegative(0, "argumentName", "MethodName");
+            try
+            {
+                ThrowIf.Argument.IsNegative(argument, "argumentName", "TestMethod");
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                Assert.Fail("ArgumentOutOfRangeException was thrown for a valid value.");
+            }
         }
 
         [TestMethod]
-        public void IsOutOfRange_ThrowsException_WhenArgumentIsOutOfRange()
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [DataRow(5, 1, 3)]
+        [DataRow(10, 5, 8)]
+        public void Argument_IsOutOfRange_ThrowsArgumentOutOfRangeException(int argument, int minValue, int maxValue)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => ThrowIf.Argument.IsOutOfRange(10, "argumentName", 1, 5));
+            // Act & Assert
+            ThrowIf.Argument.IsOutOfRange(argument, "argumentName", minValue, maxValue);
         }
 
         [TestMethod]
-        public void IsOutOfRange_DoesNotThrowException_WhenArgumentIsInRange()
+        [DataRow(2, 1, 3)]
+        [DataRow(6, 5, 8)]
+        public void Argument_IsOutOfRange_DoesNotThrowArgumentOutOfRangeException(int argument, int minValue, int maxValue)
         {
-            ThrowIf.Argument.IsOutOfRange(3, "argumentName", 1, 5);
+            try
+            {
+                ThrowIf.Argument.IsOutOfRange(argument, "argumentName", minValue, maxValue);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                Assert.Fail("ArgumentOutOfRangeException was thrown for a valid value.");
+            }
         }
 
         [TestMethod]
-        public void IsStringEmpty_ThrowsException_WhenArgumentIsEmpty()
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [DataRow(5, 2)]
+        [DataRow(30, 10)]
+        public void Argument_IsHigherThan_ThrowsArgumentOutOfRangeException(int argument, int maxValue)
         {
-            Assert.ThrowsException<ArgumentException>(() => ThrowIf.Argument.IsStringEmpty(string.Empty, "argumentName", "MethodName"));
+            // Act & Assert
+            ThrowIf.Argument.isHigherThan(argument, "argumentName", maxValue);
         }
 
         [TestMethod]
-        public void IsStringEmpty_DoesNotThrowException_WhenArgumentIsNotEmpty()
+        [DataRow(1, 1)]
+        [DataRow(-5, 5)]
+        public void Argument_IsHigherThan_DoesNotThrowArgumentOutOfRangeException(int argument, int maxValue)
         {
-            ThrowIf.Argument.IsStringEmpty("SomeValue", "argumentName", "MethodName");
+            try
+            {
+                ThrowIf.Argument.isHigherThan(argument, "argumentName", maxValue);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                Assert.Fail("ArgumentOutOfRangeException was thrown for a valid value.");
+            }
         }
 
         [TestMethod]
-        public void ValidateExactArgumentCount_ThrowsException_WhenArgumentCountIsIncorrect()
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [DataRow(3, 6)]
+        [DataRow(2, 15)]
+        public void Argument_IsLowerThan_ThrowsArgumentOutOfRangeException(int argument, int minValue)
         {
-            Assert.ThrowsException<ArgumentException>(() => ThrowIf.Argument.ValidateExactArgumentCount(3, 2, "MethodName"));
+            // Act & Assert
+            ThrowIf.Argument.IsLowerThan(argument, "argumentName", minValue);
         }
 
         [TestMethod]
-        public void ValidateExactArgumentCount_DoesNotThrowException_WhenArgumentCountIsCorrect()
+        [DataRow(1, 1)]
+        [DataRow(15, 5)]
+        public void Argument_IsLowerThan_DoesNotThrowArgumentOutOfRangeException(int argument, int minValue)
         {
-            ThrowIf.Argument.ValidateExactArgumentCount(2, 2, "MethodName");
+            try
+            {
+                ThrowIf.Argument.IsLowerThan(argument, "argumentName", minValue);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                Assert.Fail("ArgumentOutOfRangeException was thrown for a valid value.");
+            }
         }
 
         [TestMethod]
-        public void EnsureArgumentType_ThrowsException_WhenArgumentTypeIsIncorrect()
+        [ExpectedException(typeof(ArgumentException))]
+        [DataRow("")]
+        public void Argument_IsStringEmpty_ThrowsArgumentException(string argument)
         {
-            Assert.ThrowsException<ArgumentException>(() => ThrowIf.Argument.EnsureArgumentType(1, typeof(string), "argumentName", "MethodName"));
+            // Act & Assert
+            ThrowIf.Argument.IsStringEmpty(argument, "argumentName", "TestMethod");
         }
 
         [TestMethod]
-        public void EnsureArgumentType_DoesNotThrowException_WhenArgumentTypeIsCorrect()
+        [DataRow(" ")]
+        [DataRow("not empty")]
+        public void Argument_IsStringEmpty_DoesNotThrowArgumentException(string argument)
         {
-            ThrowIf.Argument.EnsureArgumentType("SomeString", typeof(string), "argumentName", "MethodName");
+            try
+            {
+                ThrowIf.Argument.IsStringEmpty(argument, "argumentName", "TestMethod");
+            }
+            catch (ArgumentException)
+            {
+                Assert.Fail("ArgumentException was thrown for a valid value.");
+            }
         }
 
         [TestMethod]
-        public void IsHigherThan_ThrowsException_WhenArgumentIsLowerThanMinValue()
+        [ExpectedException(typeof(ArgumentException))]
+        [DataRow("invalidColor")]
+        [DataRow("invalidColor2")]
+        public void Argument_InvalidColour_ThrowsArgumentException(string argument)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => ThrowIf.Argument.isHigherThan(2, "argumentName", 5));
+            // Act & Assert
+            ThrowIf.Argument.InvalidColour(argument, "argumentName", "TestMethod");
         }
 
         [TestMethod]
-        public void IsHigherThan_DoesNotThrowException_WhenArgumentIsHigherThanMinValue()
+        [DataRow("red")]
+        [DataRow("blue")]
+        public void Argument_ValidColour_DoesNotThrowArgumentException(string argument)
         {
-            ThrowIf.Argument.isHigherThan(6, "argumentName", 5);
+            try
+            {
+                ThrowIf.Argument.InvalidColour(argument, "argumentName", "TestMethod");
+            }
+            catch (ArgumentException)
+            {
+                Assert.Fail("ArgumentException was thrown for a valid value.");
+            }
         }
 
         [TestMethod]
-        public void IsLowerThan_ThrowsException_WhenArgumentIsHigherThanMaxValue()
+        [ExpectedException(typeof(ArgumentException))]
+        [DataRow("invalidBool")]
+        [DataRow("invalidBool2")]
+        public void Argument_InvalidBool_ThrowsArgumentException(string argument)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => ThrowIf.Argument.IsLowerThan(7, "argumentName", 5));
+            var arguments = new Dictionary<string, Dictionary<string, object>>
+            {
+                ["BoolArg"] = new Dictionary<string, object>
+                {
+                    { "value", argument },
+                    { "type", typeof(bool) }
+                }
+            };
+
+            // Act & Assert
+            ThrowIf.Argument.validateArguments(arguments, "TestMethod");
         }
 
         [TestMethod]
-        public void IsLowerThan_DoesNotThrowException_WhenArgumentIsLowerThanMaxValue()
+        [DataRow("true")]
+        [DataRow("false")]
+        public void Argument_ValidBool_DoesNotThrowArgumentException(string argument)
         {
-            ThrowIf.Argument.IsLowerThan(4, "argumentName", 5);
+            var arguments = new Dictionary<string, Dictionary<string, object>>
+            {
+                ["BoolArg"] = new Dictionary<string, object>
+                {
+                    { "value", argument },
+                    { "type", typeof(bool) }
+                }
+            };
+
+            try
+            {
+                ThrowIf.Argument.validateArguments(arguments, "TestMethod");
+            }
+            catch (ArgumentException)
+            {
+                Assert.Fail("ArgumentException was thrown for a valid value.");
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        [DataRow("invalidBool")]
+        [DataRow("invalidBool2")]
+        public void Argument_InvalidBool_Accept_On_Off_ThrowsArgumentException(string argument)
+        {
+            var arguments = new Dictionary<string, Dictionary<string, object>>
+            {
+                ["BoolArg"] = new Dictionary<string, object>
+                {
+                    { "value", argument },
+                    { "type", typeof(bool) },
+                    { "accept_on-off", true }
+                }
+            };
+
+            // Act & Assert
+            ThrowIf.Argument.validateArguments(arguments, "TestMethod");
+        }
+
+
+        [TestMethod]
+        [DataRow("true")]
+        [DataRow("false")]
+        [DataRow("on")]
+        [DataRow("off")]
+        public void Argument_ValidBool_Accept_On_Off_DoesNotThrowArgumentException(string argument)
+        {
+            var arguments = new Dictionary<string, Dictionary<string, object>>
+            {
+                ["BoolArg"] = new Dictionary<string, object>
+                {
+                    { "value", argument },
+                    { "type", typeof(bool) },
+                    { "accept_on-off", true }
+                }
+            };
+
+            try
+            {
+                ThrowIf.Argument.validateArguments(arguments, "TestMethod");
+            }
+            catch (ArgumentException)
+            {
+                Assert.Fail("ArgumentException was thrown for a valid value.");
+            }
         }
     }
 }
-
-
-
