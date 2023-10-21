@@ -64,13 +64,13 @@ namespace CommandParserAssignmnet
             /// </summary>
             /// <param name="argument"></param>
             /// <param name="argumentName"></param>
-            /// <param name="minValue"></param>
+            /// <param name="maxValue"></param>
             /// <exception cref="ArgumentOutOfRangeException"></exception>
-            public static void isHigherThan(int argument, string argumentName, int minValue)
+            public static void isHigherThan(int argument, string argumentName, int maxValue)
             {
-                if (argument < minValue)
+                if (argument > maxValue)
                 {
-                    throw new ArgumentOutOfRangeException(argumentName, $"{argumentName} is out of the valid range [{minValue}, ∞].");
+                    throw new ArgumentOutOfRangeException(argumentName, $"{argumentName} is out of the valid range [{maxValue}, ∞].");
                 }
             }
 
@@ -79,13 +79,13 @@ namespace CommandParserAssignmnet
             /// </summary>
             /// <param name="argument"></param>
             /// <param name="argumentName"></param>
-            /// <param name="maxValue"></param>
+            /// <param name="minValue"></param>
             /// <exception cref="ArgumentOutOfRangeException"></exception>
-            public static void IsLowerThan(int argument, string argumentName, int maxValue)
+            public static void IsLowerThan(int argument, string argumentName, int minValue)
             {
-                if (argument > maxValue)
+                if (argument < minValue)
                 {
-                    throw new ArgumentOutOfRangeException(argumentName, $"{argumentName} is out of the valid range [-∞, {maxValue}].");
+                    throw new ArgumentOutOfRangeException(argumentName, $"{argumentName} is out of the valid range [0, {minValue}].");
                 }
             }
 
@@ -204,12 +204,12 @@ namespace CommandParserAssignmnet
                         else if (argumentProperties.ContainsKey("minValue"))
                         {
                             int minValue = (int)argumentProperties["minValue"];
-                            ThrowIf.Argument.isHigherThan(argumentIntValue, argumentName, minValue);
+                            ThrowIf.Argument.IsLowerThan(argumentIntValue, argumentName, minValue);
                         }
                         else if (argumentProperties.ContainsKey("maxValue"))
                         {
                             int maxValue = (int)argumentProperties["maxValue"];
-                            ThrowIf.Argument.IsLowerThan(argumentIntValue, argumentName, maxValue);
+                            ThrowIf.Argument.isHigherThan(argumentIntValue, argumentName, maxValue);
                         }
                       
                         ThrowIf.Argument.IsNegative(argumentIntValue, argumentName, methodName);
@@ -226,15 +226,27 @@ namespace CommandParserAssignmnet
                         ThrowIf.Argument.InvalidColour(argumentValue.ToString(), argumentName, methodName);
                     }
 
-                    if(argumentType == typeof(bool))
+                    if (argumentType == typeof(bool))
                     {
                         bool argumentBoolValue;
 
-                        if(!bool.TryParse(argumentValue.ToString(), out argumentBoolValue))
+                        // Check if "accept_on-off" is present
+                        if (argumentProperties.ContainsKey("accept_on-off"))
+                        {
+                            if (!bool.TryParse(argumentValue.ToString(), out argumentBoolValue) && 
+                                !argumentValue.ToString().Equals("on", StringComparison.OrdinalIgnoreCase) && 
+                                !argumentValue.ToString().Equals("off", StringComparison.OrdinalIgnoreCase))
+                            {
+                                throw new ArgumentException($"The method '{methodName}' expects '{argumentName}' to be of type {argumentType.Name}.", methodName);
+                            }
+                        }
+                        // If "accept_on-off" is not present, just check if it's a valid boolean
+                        else if (!bool.TryParse(argumentValue.ToString(), out argumentBoolValue))
                         {
                             throw new ArgumentException($"The method '{methodName}' expects '{argumentName}' to be of type {argumentType.Name}.", methodName);
                         }
                     }
+
                 }
             }
         }
