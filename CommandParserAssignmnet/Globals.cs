@@ -7,6 +7,7 @@
         public static Color pictureBoxColor;
         public static int startingX = 0;
         public static int startingY = 0;
+        public static int animationDelay = 100;
 
         // Add global configurable settings
     }
