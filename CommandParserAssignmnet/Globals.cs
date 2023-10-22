@@ -18,5 +18,6 @@
         public static int animationDelay = 100;
 
         // Add global configurable settings
+        // Test
     }
 }
