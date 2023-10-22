@@ -35,7 +35,7 @@
             btnClear_Single = new Button();
             pictureBox1 = new PictureBox();
             btnClear_Program = new Button();
-            button5 = new Button();
+            btnSyntax_Program = new Button();
             btnRun_Program = new Button();
             txtBox_Program = new TextBox();
             label_Program = new Label();
@@ -46,6 +46,8 @@
             saveToolStripMenuItem = new ToolStripMenuItem();
             loadToolStripMenuItem = new ToolStripMenuItem();
             commandsToolStripMenuItem = new ToolStripMenuItem();
+            canvasToolStripMenuItem = new ToolStripMenuItem();
+            clearToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -116,14 +118,14 @@
             btnClear_Program.UseVisualStyleBackColor = true;
             btnClear_Program.Click += btnClear_Program_Click;
             // 
-            // button5
+            // btnSyntax_Program
             // 
-            button5.Location = new Point(93, 498);
-            button5.Name = "button5";
-            button5.Size = new Size(75, 30);
-            button5.TabIndex = 9;
-            button5.Text = "button5";
-            button5.UseVisualStyleBackColor = true;
+            btnSyntax_Program.Location = new Point(93, 498);
+            btnSyntax_Program.Name = "btnSyntax_Program";
+            btnSyntax_Program.Size = new Size(75, 30);
+            btnSyntax_Program.TabIndex = 9;
+            btnSyntax_Program.Text = "Syntax";
+            btnSyntax_Program.UseVisualStyleBackColor = true;
             // 
             // btnRun_Program
             // 
@@ -167,7 +169,7 @@
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, commandsToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, commandsToolStripMenuItem, canvasToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1281, 24);
@@ -201,6 +203,20 @@
             commandsToolStripMenuItem.Size = new Size(81, 20);
             commandsToolStripMenuItem.Text = "Commands";
             // 
+            // canvasToolStripMenuItem
+            // 
+            canvasToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { clearToolStripMenuItem });
+            canvasToolStripMenuItem.Name = "canvasToolStripMenuItem";
+            canvasToolStripMenuItem.Size = new Size(57, 20);
+            canvasToolStripMenuItem.Text = "Canvas";
+            // 
+            // clearToolStripMenuItem
+            // 
+            clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            clearToolStripMenuItem.Size = new Size(180, 22);
+            clearToolStripMenuItem.Text = "Clear";
+            clearToolStripMenuItem.Click += clearToolStripMenuItem_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -208,7 +224,7 @@
             ClientSize = new Size(1281, 716);
             Controls.Add(listBox1);
             Controls.Add(btnClear_Program);
-            Controls.Add(button5);
+            Controls.Add(btnSyntax_Program);
             Controls.Add(btnRun_Program);
             Controls.Add(txtBox_Program);
             Controls.Add(label_Program);
@@ -238,7 +254,7 @@
         private Button btnClear_Single;
         private PictureBox pictureBox1;
         private Button btnClear_Program;
-        private Button button5;
+        private Button btnSyntax_Program;
         private Button btnRun_Program;
         private TextBox txtBox_Program;
         private Label label_Program;
@@ -249,5 +265,7 @@
         private ToolStripMenuItem saveToolStripMenuItem;
         private ToolStripMenuItem loadToolStripMenuItem;
         private ToolStripMenuItem commandsToolStripMenuItem;
+        private ToolStripMenuItem canvasToolStripMenuItem;
+        private ToolStripMenuItem clearToolStripMenuItem;
     }
 }

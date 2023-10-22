@@ -4,7 +4,7 @@ namespace CommandParserAssignmnet
 {
     public class Parser
     {
-        private Form1 form1;
+        private Form1? form1;
         private Command command;
         private Dictionary<string, Action<string[]>> commandDictionary;
 

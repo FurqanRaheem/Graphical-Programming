@@ -9,6 +9,7 @@ namespace CommandParserAssignmnet
         public Form1()
         {
             InitializeComponent();
+            GlobalExceptionHandler.SetPrintErrorMessage(PrintErrorMessage);
 
             // Initialise global variables
             Globals.pictureBoxWidth = pictureBox1.Width;
@@ -22,7 +23,7 @@ namespace CommandParserAssignmnet
 
         private void txtBox_Single_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if(e.KeyChar == (char)Keys.Enter)
+            if (e.KeyChar == (char)Keys.Enter)
             {
                 string command = txtBox_Single.Text.Trim();
                 ExecuteCommand(command);
@@ -102,7 +103,27 @@ namespace CommandParserAssignmnet
         {
             Graphics g = e.Graphics;
 
+            // Draw bitmap
             g.DrawImage(graphicsHandler.getBitmap(), 0, 0);
+
+            // Draw cursor
+            if (Globals.showCursor)
+            {
+                float x = graphicsHandler.X - Globals.cursorSize / 2;
+                float y = graphicsHandler.Y - Globals.cursorSize / 2;
+                g.FillRectangle(new SolidBrush(Color.Red), x, y, Globals.cursorSize, Globals.cursorSize);
+            }
+        }
+
+        private void PrintErrorMessage(string message)
+        {
+            listBox1.Items.Add(message);
+        }
+
+        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            graphicsHandler.getGraphics().Clear(Globals.pictureBoxColor);
+            Refresh();
         }
     }
 }
