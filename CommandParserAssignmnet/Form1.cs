@@ -9,12 +9,7 @@ namespace CommandParserAssignmnet
         public Form1()
         {
             InitializeComponent();
-            GlobalExceptionHandler.SetPrintErrorMessage(PrintErrorMessage);
-
-            // Initialise global variables
-            Globals.pictureBoxWidth = pictureBox1.Width;
-            Globals.pictureBoxHeight = pictureBox1.Height;
-            Globals.pictureBoxColor = pictureBox1.BackColor;
+            projectSetup();
 
             fileHandler = new FileHandler();
             graphicsHandler = new GraphicsHandler();
@@ -124,6 +119,31 @@ namespace CommandParserAssignmnet
         {
             graphicsHandler.getGraphics().Clear(Globals.pictureBoxColor);
             Refresh();
+        }
+
+        private void cursorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Globals.showCursor = !Globals.showCursor;
+            Refresh();
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // TODO: Open settings form
+        }
+
+        private void projectSetup()
+        {
+            // Set global error handler
+            GlobalExceptionHandler.SetPrintErrorMessage(PrintErrorMessage);
+
+            // Initialise global variables
+            Globals.pictureBoxWidth = pictureBox1.Width;
+            Globals.pictureBoxHeight = pictureBox1.Height;
+            Globals.pictureBoxColor = pictureBox1.BackColor;
+
+            // Idk what this comes under
+            cursorToolStripMenuItem.Checked = Globals.showCursor;
         }
     }
 }

@@ -48,6 +48,8 @@
             commandsToolStripMenuItem = new ToolStripMenuItem();
             canvasToolStripMenuItem = new ToolStripMenuItem();
             clearToolStripMenuItem = new ToolStripMenuItem();
+            cursorToolStripMenuItem = new ToolStripMenuItem();
+            settingsToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -169,7 +171,7 @@
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, commandsToolStripMenuItem, canvasToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, commandsToolStripMenuItem, canvasToolStripMenuItem, settingsToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1281, 24);
@@ -205,7 +207,7 @@
             // 
             // canvasToolStripMenuItem
             // 
-            canvasToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { clearToolStripMenuItem });
+            canvasToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { clearToolStripMenuItem, cursorToolStripMenuItem });
             canvasToolStripMenuItem.Name = "canvasToolStripMenuItem";
             canvasToolStripMenuItem.Size = new Size(57, 20);
             canvasToolStripMenuItem.Text = "Canvas";
@@ -216,6 +218,21 @@
             clearToolStripMenuItem.Size = new Size(180, 22);
             clearToolStripMenuItem.Text = "Clear";
             clearToolStripMenuItem.Click += clearToolStripMenuItem_Click;
+            // 
+            // cursorToolStripMenuItem
+            // 
+            cursorToolStripMenuItem.CheckOnClick = true;
+            cursorToolStripMenuItem.Name = "cursorToolStripMenuItem";
+            cursorToolStripMenuItem.Size = new Size(180, 22);
+            cursorToolStripMenuItem.Text = "Cursor";
+            cursorToolStripMenuItem.Click += cursorToolStripMenuItem_Click;
+            // 
+            // settingsToolStripMenuItem
+            // 
+            settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            settingsToolStripMenuItem.Size = new Size(61, 20);
+            settingsToolStripMenuItem.Text = "Settings";
+            settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -267,5 +284,7 @@
         private ToolStripMenuItem commandsToolStripMenuItem;
         private ToolStripMenuItem canvasToolStripMenuItem;
         private ToolStripMenuItem clearToolStripMenuItem;
+        private ToolStripMenuItem cursorToolStripMenuItem;
+        private ToolStripMenuItem settingsToolStripMenuItem;
     }
 }
