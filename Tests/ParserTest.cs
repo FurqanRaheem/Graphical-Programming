@@ -1,4 +1,5 @@
 using System.Drawing;
+using Moq;
 namespace Tests
 {
     [TestClass]
@@ -387,6 +388,40 @@ namespace Tests
         [DataRow("help 50,50,50")]
         [DataRow("help fifty")]
         public void ParseLine_Help_Command_With_Invalid_Parameters_ThrowsArgumentException(string command)
+        {
+            // Act & Assert
+            parser.ParseLine(command);
+            Assert.IsTrue(BitmapHasNoDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
+        }
+       
+        [TestMethod]
+        public void ParseLine_Run_Command_ParsesCorrectly()
+        {
+            // Setup
+            Form1 form1 = new Form1(true);
+            Parser parser = form1.Parser;
+            GraphicsHandler graphicsHandler = form1.GraphicsHandler;
+           
+            form1.TxtBoxProgramText = "drawTo 50,50\r\npen red\r\nrectangle 50,50\r\nfill on";
+
+            // Act
+            parser.ParseLine("run");
+
+            // Assert
+            Assert.AreEqual(50, graphicsHandler.X);
+            Assert.AreEqual(50, graphicsHandler.Y);
+            Assert.AreEqual(Color.Red, graphicsHandler.PenColour);
+            Assert.AreEqual(graphicsHandler.Fill, true);
+            Assert.IsTrue(BitmapHasDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        [DataRow("run 50")]
+        [DataRow("run 50,50")]
+        [DataRow("run 50,50,50")]
+        [DataRow("run fifty")]
+        public void ParseLine_Run_Command_With_Invalid_Parameters_ThrowsArgumentException(string command)
         {
             // Act & Assert
             parser.ParseLine(command);

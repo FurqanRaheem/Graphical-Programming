@@ -43,6 +43,7 @@ namespace CommandParserAssignmnet
             commandDictionary["square"] = command.Square;
             commandDictionary["triangle"] = command.Triangle;
             commandDictionary["help"] = command.Help;
+            commandDictionary["run"] = Run;
         }
 
         /// <summary>
@@ -101,6 +102,32 @@ namespace CommandParserAssignmnet
             else
             { 
                 throw new ArgumentException($"Command '{commandName}' not recognized. Type 'help' for a list of commands.");
+            }
+        }
+
+        /// <summary>
+        /// Runs the program in txtBox_Program.
+        /// </summary>
+        /// <param name="parameters">The parameters.</param>
+        /// <exception cref="NullReferenceException">Form1 is null.</exception>
+        public void Run(string[] parameters)
+        {
+            #region Run Command Validation
+            ThrowIf.Argument.ValidateExactArgumentCount(parameters, 0, "Run");
+            #endregion
+
+            if (form1 == null)
+            {
+                throw new NullReferenceException("Form1 is null.");
+            }
+
+            if(form1.Test == true)
+            {
+                form1.Unit_Test_btnRun_Program_Click();
+            }
+            else
+            {           
+                form1.BtnRunProgram.PerformClick();
             }
         }
     }
