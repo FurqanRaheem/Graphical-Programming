@@ -106,7 +106,7 @@ namespace CommandParserAssignmnet
             {
                 float x = graphicsHandler.X - Globals.cursorSize / 2;
                 float y = graphicsHandler.Y - Globals.cursorSize / 2;
-                g.FillRectangle(new SolidBrush(Color.Red), x, y, Globals.cursorSize, Globals.cursorSize);
+                g.FillRectangle(new SolidBrush(Globals.cursorColour), x, y, Globals.cursorSize, Globals.cursorSize);
             }
         }
 
@@ -142,7 +142,7 @@ namespace CommandParserAssignmnet
             Globals.pictureBoxHeight = pictureBox1.Height;
             Globals.pictureBoxColor = pictureBox1.BackColor;
 
-            // Idk what this comes under
+            // Windows Forms Settings
             cursorToolStripMenuItem.Checked = Globals.showCursor;
         }
     }

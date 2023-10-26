@@ -9,7 +9,7 @@
 
         // Cursor settings
         public static bool showCursor = true;
-        public static int cursorSize = 5;
+        public static int cursorSize = 7;
         public static Color cursorColour = Color.Red;
         public static int startingX = 0;
         public static int startingY = 0;
