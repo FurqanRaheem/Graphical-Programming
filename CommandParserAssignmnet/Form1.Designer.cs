@@ -146,6 +146,7 @@
             txtBox_Program.Name = "txtBox_Program";
             txtBox_Program.Size = new Size(376, 349);
             txtBox_Program.TabIndex = 7;
+            txtBox_Program.TextChanged += txtBox_Program_TextChanged;
             // 
             // label_Program
             // 
@@ -215,7 +216,7 @@
             // clearToolStripMenuItem
             // 
             clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            clearToolStripMenuItem.Size = new Size(180, 22);
+            clearToolStripMenuItem.Size = new Size(109, 22);
             clearToolStripMenuItem.Text = "Clear";
             clearToolStripMenuItem.Click += clearToolStripMenuItem_Click;
             // 
@@ -223,7 +224,7 @@
             // 
             cursorToolStripMenuItem.CheckOnClick = true;
             cursorToolStripMenuItem.Name = "cursorToolStripMenuItem";
-            cursorToolStripMenuItem.Size = new Size(180, 22);
+            cursorToolStripMenuItem.Size = new Size(109, 22);
             cursorToolStripMenuItem.Text = "Cursor";
             cursorToolStripMenuItem.Click += cursorToolStripMenuItem_Click;
             // 
