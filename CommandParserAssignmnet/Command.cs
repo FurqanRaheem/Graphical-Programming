@@ -5,6 +5,7 @@ namespace CommandParserAssignmnet
     public class Command
     {
         GraphicsHandler graphicsHandler;
+        ShapeFactory shapeFactory;
 
         /// <summary>
         /// Constructor for the Command class.
@@ -13,6 +14,7 @@ namespace CommandParserAssignmnet
         public Command(GraphicsHandler graphicsHandler)
         {
             this.graphicsHandler = graphicsHandler;
+            this.shapeFactory = new ShapeFactory();
         }
 
         /// <summary>
@@ -260,7 +262,7 @@ namespace CommandParserAssignmnet
             // Validation passed, so we can parse the arguments
             int radius = int.Parse(args[0]);
 
-            Circle circle = new Circle(radius);
+            Shape circle = shapeFactory.getShape("circle", paramsToArray(radius));
             circle.Draw(graphicsHandler);
         }
 
@@ -309,7 +311,7 @@ namespace CommandParserAssignmnet
             int width = int.Parse(args[0]);
             int height = int.Parse(args[1]);
 
-            Rectangle rectangle = new Rectangle(width, height);
+            Shape rectangle = shapeFactory.getShape("rectangle", paramsToArray(width, height));
             rectangle.Draw(graphicsHandler);
         }
 
@@ -348,7 +350,7 @@ namespace CommandParserAssignmnet
             // Validation passed, so we can parse the arguments
             int sideLength = int.Parse(args[0]);
 
-            Square square = new Square(sideLength);
+            Shape square = shapeFactory.getShape("square", paramsToArray(sideLength));
             square.Draw(graphicsHandler);
         }
 
@@ -418,25 +420,25 @@ namespace CommandParserAssignmnet
             #endregion
 
             // Validation passed, so we can parse the arguments
-            Triangle triangle;
+            Shape triangle;
 
             if (args.Length == 1)
             {
                 int sideLength = int.Parse(args[0]);
-                triangle = new EquilateralTriangle(sideLength, graphicsHandler.X, graphicsHandler.Y);
+                triangle = shapeFactory.getShape("equil_triangle", paramsToArray(sideLength, graphicsHandler.X, graphicsHandler.Y));
             }
             else if (args.Length == 2)
             {
                 int sideA = int.Parse(args[0]);
                 int sideB = int.Parse(args[1]);
-                triangle = new IsoscelesTriangle(sideA, sideB, graphicsHandler.X, graphicsHandler.Y);
+                triangle = shapeFactory.getShape("isos_triangle", paramsToArray(sideA, sideB, graphicsHandler.X, graphicsHandler.Y));
             }
             else
             {
                 int sideA = int.Parse(args[0]);
                 int sideB = int.Parse(args[1]);
                 int sideC = int.Parse(args[2]);
-                triangle = new Triangle(sideA, sideB, sideC, graphicsHandler.X, graphicsHandler.Y);
+                triangle = shapeFactory.getShape("triangle", paramsToArray(sideA, sideB, sideC, graphicsHandler.X, graphicsHandler.Y));
             }
 
             triangle.Draw(graphicsHandler);
@@ -469,6 +471,16 @@ namespace CommandParserAssignmnet
             Console.WriteLine("square sideLength");
             Console.WriteLine("triangle sideA,sideB,sideC");
             Console.WriteLine("help");
+        }
+
+        /// <summary>
+        /// Takes a variable number of arguments and returns them as an array.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns> An array of integers containing the provided arguments.</returns>
+        private int[] paramsToArray(params int[] args)
+        {
+            return args;
         }
     }
 }
