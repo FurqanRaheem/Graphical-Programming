@@ -1,5 +1,5 @@
 using System.Drawing;
-using Moq;
+
 namespace Tests
 {
     [TestClass]

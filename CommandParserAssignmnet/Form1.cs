@@ -188,7 +188,7 @@ namespace CommandParserAssignmnet
             }
             else
             {
-                MessageBox.Show("Error saving file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw new Exception("Error saving file.");
             }
         }
 
@@ -208,7 +208,7 @@ namespace CommandParserAssignmnet
             }
             else
             {
-                MessageBox.Show("Error loading file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw new Exception("Error loading file.");
             }
         }
 

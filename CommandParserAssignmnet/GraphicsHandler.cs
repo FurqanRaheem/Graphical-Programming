@@ -88,7 +88,7 @@ namespace CommandParserAssignmnet
         public Color PenColour
         {
             get { return penColour; }
-            set { penColour = value; pen.Color = value; }
+            set { penColour = value; pen.Color = value; brush.Color = value; }
         }
 
         /// <summary>

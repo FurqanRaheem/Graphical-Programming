@@ -6,6 +6,7 @@ namespace CommandParserAssignmnet;
 public class FileHandler
 {
 
+
     /// <summary>
     /// Saves the specified content to a file. Shows a SaveFileDialog to allow the user to choose the file location and name.
     /// </summary>
@@ -28,8 +29,7 @@ public class FileHandler
                     return true; // Success
                 }
                 catch (Exception ex)
-                {
-                    Console.WriteLine($"Error saving file: {ex.Message}");
+                { 
                     return false; // Failure
                 }
             }
@@ -60,7 +60,6 @@ public class FileHandler
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error loading file: {ex.Message}");
                     return null; // Return null to indicate failure
                 }
             }
