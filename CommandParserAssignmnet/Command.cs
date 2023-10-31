@@ -6,6 +6,7 @@ namespace CommandParserAssignmnet
     {
         GraphicsHandler graphicsHandler;
         ShapeFactory shapeFactory;
+        Variables variables;
 
         /// <summary>
         /// Constructor for the Command class.
@@ -15,6 +16,7 @@ namespace CommandParserAssignmnet
         {
             this.graphicsHandler = graphicsHandler;
             this.shapeFactory = new ShapeFactory();
+            this.variables = Variables.Instance;
         }
 
         /// <summary>
@@ -40,6 +42,17 @@ namespace CommandParserAssignmnet
         {
             #region MoveTo Argument Validation
             ThrowIf.Argument.ValidateExactArgumentCount(args, 2, "MoveTo");
+
+            // Check if argumenets are raw values or variables
+            if (variables.ContainsVariable(args[0]))
+            {
+                args[0] = variables.GetVariable(args[0]).ToString();
+            }
+
+            if (variables.ContainsVariable(args[1]))
+            {
+                args[1] = variables.GetVariable(args[1]).ToString();
+            }
 
             var argumentValidator = new Dictionary<string, Dictionary<string, object>>
             {
