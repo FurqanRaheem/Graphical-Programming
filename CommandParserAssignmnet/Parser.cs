@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace CommandParserAssignmnet
 {
@@ -6,11 +7,14 @@ namespace CommandParserAssignmnet
     {
         private Form1? form1;
         private Command command;
+        private Variables variables;
         private Dictionary<string, Action<string[]>> commandDictionary;
+
 
         public Parser(GraphicsHandler graphicsHandler, Form1 form1)
         {
             this.command = new Command(graphicsHandler);
+            this.variables = Variables.Instance;
             this.form1 = form1;
 
             // Create a dictionary of commands and their corresponding methods
@@ -21,6 +25,7 @@ namespace CommandParserAssignmnet
         public Parser(GraphicsHandler graphicsHandler)
         {
             this.command = new Command(graphicsHandler);
+            this.variables = Variables.Instance;
 
             // Create a dictionary of commands and their corresponding methods
             commandDictionary = new Dictionary<string, Action<string[]>>(StringComparer.OrdinalIgnoreCase);
@@ -86,22 +91,58 @@ namespace CommandParserAssignmnet
         /// <exception cref="ArgumentException">Thrown if no command is entered or if the command is not recognized.</exception>
         public void ParseLine(string input)
         {
-            string[] parts = input.Split(' ');
+            ThrowIf.Argument.IsStringEmpty(input, new Exception("No command entered."));
 
-            if (parts.Length == 0)
+            // Check for variable
+            if(input.Contains('='))
             {
-                throw new ArgumentException("No command entered.");
-            }
-
-            string commandName = parts[0];
-            if (commandDictionary.ContainsKey(commandName))
-            {
-                string[] parameters = parts.Length > 1 ? parts[1].Split(',') : Array.Empty<string>();
-                commandDictionary[commandName](parameters);
+                CheckForVariableDeclaration(input);
             }
             else
-            { 
-                throw new ArgumentException($"Command '{commandName}' not recognized. Type 'help' for a list of commands.");
+            {
+                string[] parts = input.Split(' ');
+
+                if (parts.Length == 0)
+                {
+                    throw new ArgumentException("No command entered.");
+                }
+
+                string commandName = parts[0];
+                if (commandDictionary.ContainsKey(commandName))
+                {
+                    string[] parameters = parts.Length > 1 ? parts[1].Split(',') : Array.Empty<string>();
+                    commandDictionary[commandName](parameters);
+                }
+                else
+                {
+                    throw new ArgumentException($"Command '{commandName}' not recognized. Type 'help' for a list of commands.");
+                }
+            }
+        }
+
+        private void CheckForVariableDeclaration(string input)
+        {
+            // Split input into parts
+            string[] parts = input.Split('=');
+
+            ThrowIf.Argument.ValidateExactArgumentCount(parts, 2, new Exception("Invalid variable assignment."));
+            ThrowIf.Argument.IsStringEmpty(parts[0], new Exception("Variable name cannot be empty."));
+            ThrowIf.Argument.ParsableToType<int>(parts[0], new Exception("Variable name cannot be a number."));
+            ThrowIf.Argument.NotParsableToType<int>(parts[1], new Exception("Invalid value type. Value must be an integer."));
+       
+            string variableName = parts[0].Trim().ToLower();
+            int variableValue = int.Parse(parts[1]);
+
+            // Check if variable is already in dictionary
+            if (variables.ContainsVariable(variableName))
+            {
+                // If variable is already in dictionary, update the value
+                variables.SetVariable(variableName, variableValue);
+            }
+            else
+            {
+                // If variable is not in dictionary, add it
+                variables.AddVariable(variableName, variableValue);
             }
         }
 
