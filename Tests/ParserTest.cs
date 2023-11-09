@@ -2,6 +2,9 @@ using System.Drawing;
 
 namespace Tests
 {
+    /// <summary>
+    /// Unit tests for the Parser class, which parses drawing commands and updates the GraphicsHandler.
+    /// </summary>
     [TestClass]
     public class ParserTests
     {
@@ -19,6 +22,9 @@ namespace Tests
             parser = new Parser(graphicsHandler);
         }
 
+        /// <summary>
+        /// Tests the ParseLine method with an unrecognized command. Expects an ArgumentException.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         [DataRow("invalid")]
@@ -30,6 +36,9 @@ namespace Tests
             parser.ParseLine(command);
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "moveTo" command, ensuring it updates the cursor position correctly.
+        /// </summary>
         [TestMethod]
         public void ParseLine_MoveTo_Command_ParsesCorrectly()
         {
@@ -43,6 +52,9 @@ namespace Tests
             Assert.IsTrue(BitmapHasNoDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "moveTo" command with various invalid parameters, ensuring it throws an ArgumentException.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         [DataRow("moveTo")]
@@ -54,6 +66,9 @@ namespace Tests
             parser.ParseLine(command);
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "drawTo" command, ensuring it updates the cursor position correctly and draws on the bitmap.
+        /// </summary>
         [TestMethod]
         public void ParseLine_DrawTo_Command_ParsesCorrectly()
         {
@@ -67,6 +82,9 @@ namespace Tests
             Assert.IsTrue(BitmapHasDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "drawTo" command with various invalid parameters, ensuring it throws an ArgumentException.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         [DataRow("drawTo")]
@@ -78,6 +96,9 @@ namespace Tests
             parser.ParseLine(command);
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "reset" command, ensuring it resets the cursor positions to their starting values and maintains the drawing on the bitmap.
+        /// </summary>
         [TestMethod]
         public void ParseLine_Reset_Command_ParsesCorrectly()
         { 
@@ -92,6 +113,9 @@ namespace Tests
             Assert.IsTrue(BitmapHasDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "reset" command with extra parameters, ensuring it throws an ArgumentException.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void ParseLine_Reset_Command_With_Extra_Parameters_ThrowsArgumentException()
@@ -100,6 +124,9 @@ namespace Tests
             parser.ParseLine("reset 100,100");
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "clear" command, ensuring it clears the bitmap and maintains cursor positions.
+        /// </summary>
         [TestMethod]
         public void ParseLine_Clear_Command_ParsesCorrectly()
         {
@@ -113,6 +140,9 @@ namespace Tests
             Assert.IsTrue(BitmapHasNoDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "clear" command with extra parameters, ensuring it throws an ArgumentException.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void ParseLine_Clear_Command_With_Extra_Parameters_ThrowsArgumentException()
@@ -121,6 +151,9 @@ namespace Tests
             parser.ParseLine("clear 100,100");
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "pen" command, ensuring it sets the pen color and maintains the drawing on the bitmap.
+        /// </summary>
         [TestMethod]
         public void ParseLine_Pen_Command_ParsesCorrectly()
         {
@@ -133,6 +166,9 @@ namespace Tests
             Assert.IsTrue(BitmapHasDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "pen" command with various invalid parameters, ensuring it throws an ArgumentException.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         [DataRow("pen")]
@@ -143,6 +179,9 @@ namespace Tests
             parser.ParseLine(command);
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "fill" command, ensuring it sets the "Fill" property correctly based on different valid input variations.
+        /// </summary>
         [TestMethod]
         [DataRow("fill on")]
         [DataRow("fill off")]
@@ -159,6 +198,9 @@ namespace Tests
             Assert.AreEqual(graphicsHandler.Fill, expectedFill);
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "fill" command with various invalid parameters, ensuring it throws an ArgumentException.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         [DataRow("fill")]
@@ -171,6 +213,9 @@ namespace Tests
             parser.ParseLine(command);
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "circle" command, ensuring it correctly draws a circle on the bitmap.
+        /// </summary>
         [TestMethod]
         public void ParseLine_DrawCircle_Command_ParsesCorrectly()
         {
@@ -207,6 +252,9 @@ namespace Tests
             Assert.IsFalse(isBitmapAllBlack);
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "circle" command with various invalid parameters, ensuring it throws an ArgumentException.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         [DataRow("circle")]
@@ -219,6 +267,9 @@ namespace Tests
             Assert.IsTrue(BitmapHasNoDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "rectangle" command with the "fill off" modifier, ensuring it correctly draws an empty rectangle on the bitmap.
+        /// </summary>
         [TestMethod]
         public void ParseLine_DrawRectangle_Fill_Off_Command_ParsesCorrectly()
         {
@@ -246,6 +297,9 @@ namespace Tests
             }
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "rectangle" command with the "fill on" modifier, ensuring it correctly draws a filled rectangle on the bitmap.
+        /// </summary>
         [TestMethod]
         public void ParseLine_DrawRectangle_Fill_On_Command_ParsesCorrectly()
         {
@@ -271,6 +325,9 @@ namespace Tests
             }
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "rectangle" command with various invalid parameters, ensuring it throws an ArgumentException.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         [DataRow("rectangle")]
@@ -284,6 +341,9 @@ namespace Tests
             Assert.IsTrue(BitmapHasNoDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "square" command with the "fill off" modifier, ensuring it correctly draws an empty square on the bitmap.
+        /// </summary>
         [TestMethod]
         public void ParseLine_DrawSquare_Fill_Off_Command_ParsesCorrectly()
         {
@@ -310,6 +370,9 @@ namespace Tests
             }
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "square" command with the "fill on" modifier, ensuring it correctly draws a filled square on the bitmap.
+        /// </summary>
         [TestMethod]
         public void ParseLine_DrawSquare_Fill_On_Command_ParsesCorrectly()
         {
@@ -334,6 +397,9 @@ namespace Tests
             }
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "square" command with various invalid parameters, ensuring it throws an ArgumentException.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         [DataRow("square")]
@@ -347,6 +413,9 @@ namespace Tests
             Assert.IsTrue(BitmapHasNoDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "triangle" command with valid parameters, ensuring it correctly draws a triangle on the bitmap.
+        /// </summary>
         [TestMethod]
         [DataRow("triangle 50")]
         [DataRow("triangle 50,60")]
@@ -358,6 +427,9 @@ namespace Tests
             Assert.IsTrue(BitmapHasDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "triangle" command with various invalid parameters, ensuring it throws an ArgumentException.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         [DataRow("triangle")]
@@ -371,6 +443,9 @@ namespace Tests
             Assert.IsTrue(BitmapHasNoDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "help" command, ensuring it correctly displays help information.
+        /// </summary>
         [TestMethod]
         public void ParseLine_Help_Command_ParsesCorrectly()
         {
@@ -381,6 +456,9 @@ namespace Tests
             Assert.IsTrue(BitmapHasNoDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
         }
 
+        /// <summary>
+        /// Tests the ParseLine method for the "help" command with various invalid parameters, ensuring it throws an ArgumentException.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         [DataRow("help 50")]
@@ -393,7 +471,10 @@ namespace Tests
             parser.ParseLine(command);
             Assert.IsTrue(BitmapHasNoDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
         }
-       
+
+        /// <summary>
+        /// Tests the ParseLine method for the "run" command, ensuring it correctly executes a program with multiple commands and updates the state accordingly.
+        /// </summary>
         [TestMethod]
         public void ParseLine_Run_Command_ParsesCorrectly()
         {
@@ -415,6 +496,11 @@ namespace Tests
             Assert.IsTrue(BitmapHasDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
         }
 
+
+        /// <summary>
+        /// Tests the ParseLine method for the "run" command with various invalid parameters, ensuring it throws an ArgumentException.
+        /// </summary>
+        /// <param name="command">The command.</param>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         [DataRow("run 50")]
@@ -428,6 +514,9 @@ namespace Tests
             Assert.IsTrue(BitmapHasNoDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
         }
 
+        /// <summary>
+        /// Tests the ParseProgram method to ensure it correctly parses and executes a program with multiple commands, updating the state accordingly.
+        /// </summary>
         [TestMethod]
         public void ParseProgram_Multiple_Commands_ParsesCorrectly()
         {
@@ -442,6 +531,9 @@ namespace Tests
             Assert.IsTrue(BitmapHasDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
         }
 
+        /// <summary>
+        /// Tests the ParseProgram method with a program containing invalid commands, ensuring it throws an ArgumentException.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void ParseProgram_Multiple_Commands_With_Invalid_Commands_ParsesCorrectly()
@@ -457,6 +549,12 @@ namespace Tests
             Assert.IsTrue(BitmapHasDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
         }
 
+        /// <summary>
+        /// Helper method to check if a Bitmap contains any drawing (pixels with the specified penColor).
+        /// </summary>
+        /// <param name="bitmap">The Bitmap to check.</param>
+        /// <param name="penColor">The pen color to search for in the Bitmap.</param>
+        /// <returns>True if there is drawing in the Bitmap, otherwise false.</returns>
         private bool BitmapHasDrawing(Bitmap bitmap, Color penColour)
         {
             int penColourArgb = penColour.ToArgb();
@@ -475,6 +573,12 @@ namespace Tests
             return !isBitmapAllBlack;
         }
 
+        /// <summary>
+        /// Helper method to check if a Bitmap does not contain any drawing (no pixels with the specified penColor).
+        /// </summary>
+        /// <param name="bitmap">The Bitmap to check.</param>
+        /// <param name="penColor">The pen color to search for in the Bitmap.</param>
+        /// <returns>True if there is no drawing in the Bitmap, otherwise false.</returns>
         private bool BitmapHasNoDrawing(Bitmap bitmap, Color penColour)
         {
             int penColourArgb = penColour.ToArgb();

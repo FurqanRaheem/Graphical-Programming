@@ -3,6 +3,10 @@ namespace Tests
     [TestClass]
     public class ThrowIfTests
     {
+        /// <summary>
+        /// Tests the ThrowIf.Argument.IsNull method. It should throw an ArgumentNullException if the argument is null.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         [DataRow(null)]
@@ -12,6 +16,10 @@ namespace Tests
             ThrowIf.Argument.IsNull(argument, "argumentName", "TestMethod");
         }
 
+        /// <summary>
+        /// Tests the ThrowIf.Argument.IsNull method. It should not throw an ArgumentNullException if the argument is not null.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
         [TestMethod]
         [DataRow(0)]
         [DataRow("null")]
@@ -27,6 +35,10 @@ namespace Tests
             }
         }
 
+        /// <summary>
+        /// Test the ThrowIf.Argument.IsNegative method. It should throw an ArgumentOutOfRangeException if the argument is negative.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         [DataRow(-1)]
@@ -37,6 +49,10 @@ namespace Tests
             ThrowIf.Argument.IsNegative(argument, "argumentName", "TestMethod");
         }
 
+        /// <summary>
+        /// Test the ThrowIf.Argument.IsNegative method. It should not throw an ArgumentOutOfRangeException if the argument is not negative.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
         [TestMethod]
         [DataRow(0)]
         [DataRow(1)]
@@ -52,6 +68,12 @@ namespace Tests
             }
         }
 
+        /// <summary>
+        /// Test the ThrowIf.Argument.IsOutOfRange method. It should throw an ArgumentOutOfRangeException if the argument is negative or zero.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
+        /// <param name="minValue">The minimum value.</param>
+        /// <param name="maxValue">The maximum value.</param>
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         [DataRow(5, 1, 3)]
@@ -62,6 +84,12 @@ namespace Tests
             ThrowIf.Argument.IsOutOfRange(argument, "argumentName", minValue, maxValue);
         }
 
+        /// <summary>   
+        /// Test the ThrowIf.Argument.IsOutOfRange method. It should not throw an ArgumentOutOfRangeException if the argument is not negative or zero.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
+        /// <param name="minValue">The minimum value.</param>
+        /// <param name="maxValue">The maximum value.</param>
         [TestMethod]
         [DataRow(2, 1, 3)]
         [DataRow(6, 5, 8)]
@@ -77,6 +105,11 @@ namespace Tests
             }
         }
 
+        /// <summary>
+        /// Test the ThrowIf.Argument.IsHigherThan method. It should throw an ArgumentOutOfRangeException if the argument is higher than the maximum value.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
+        /// <param name="maxValue">The maximum value.</param>
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         [DataRow(5, 2)]
@@ -87,6 +120,10 @@ namespace Tests
             ThrowIf.Argument.isHigherThan(argument, "argumentName", maxValue);
         }
 
+        /// <summary>
+        /// Test the ThrowIf.Argument.IsHigherThan method. It should not throw an ArgumentOutOfRangeException if the argument is not higher than the maximum value.
+        /// <param name="argument">The argument.</param>
+        /// <param name="maxValue">The maximum value.</param>
         [TestMethod]
         [DataRow(1, 1)]
         [DataRow(-5, 5)]
@@ -102,6 +139,11 @@ namespace Tests
             }
         }
 
+        /// <summary>
+        /// Test the ThrowIf.Argument.IsLowerThan method. It should throw an ArgumentOutOfRangeException if the argument is lower than the minimum value.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
+        /// <param name="minValue">The minimum value.</param>
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         [DataRow(3, 6)]
@@ -112,6 +154,11 @@ namespace Tests
             ThrowIf.Argument.IsLowerThan(argument, "argumentName", minValue);
         }
 
+        /// <summary>
+        /// Test the ThrowIf.Argument.IsLowerThan method. It should not throw an ArgumentOutOfRangeException if the argument is not lower than the minimum value.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
+        /// <param name="minValue">The minimum value.</param>
         [TestMethod]
         [DataRow(1, 1)]
         [DataRow(15, 5)]
@@ -127,6 +174,10 @@ namespace Tests
             }
         }
 
+        /// <summary>
+        /// Test the ThrowIf.Argument.IsStringEmpty method. It should throw an ArgumentException if the argument is empty.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         [DataRow("")]
@@ -136,6 +187,10 @@ namespace Tests
             ThrowIf.Argument.IsStringEmpty(argument, "argumentName", "TestMethod");
         }
 
+        /// <summary>
+        /// Test the ThrowIf.Argument.IsStringEmpty method. It should not throw an ArgumentException if the argument is not empty.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
         [TestMethod]
         [DataRow(" ")]
         [DataRow("not empty")]
@@ -151,6 +206,10 @@ namespace Tests
             }
         }
 
+        /// <summary>
+        /// Test the ThrowIf.Argument.InvalidColour method. It should throw an ArgumentException if the argument is not a valid colour.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         [DataRow("invalidColor")]
@@ -161,6 +220,10 @@ namespace Tests
             ThrowIf.Argument.InvalidColour(argument, "argumentName", "TestMethod");
         }
 
+        /// <summary>
+        /// Test the ThrowIf.Argument.InvalidColour method. It should not throw an ArgumentException if the argument is a valid colour.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
         [TestMethod]
         [DataRow("red")]
         [DataRow("blue")]
@@ -176,6 +239,10 @@ namespace Tests
             }
         }
 
+        /// <summary>
+        /// Test the ThrowIf.Argument.InvalidBool method. It should throw an ArgumentException if the argument is not a valid bool.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         [DataRow("invalidBool")]
@@ -195,6 +262,10 @@ namespace Tests
             ThrowIf.Argument.validateArguments(arguments, "TestMethod");
         }
 
+        /// <summary>
+        /// Test the ThrowIf.Argument.InvalidBool method. It should not throw an ArgumentException if the argument is a valid bool.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
         [TestMethod]
         [DataRow("true")]
         [DataRow("false")]
@@ -219,6 +290,10 @@ namespace Tests
             }
         }
 
+        /// <summary>
+        /// Test the ThrowIf.Argument.InvalidBool method with the accept_on-off parameter. It should throw an ArgumentException if the argument is not a valid bool.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         [DataRow("invalidBool")]
@@ -239,7 +314,9 @@ namespace Tests
             ThrowIf.Argument.validateArguments(arguments, "TestMethod");
         }
 
-
+        /// <summary>
+        /// Test the ThrowIf.Argument.InvalidBool method with the accept_on-off parameter. It should not throw an ArgumentException if the argument is a valid bool.
+        /// <param name="argument">The argument.</param>
         [TestMethod]
         [DataRow("true")]
         [DataRow("false")]
