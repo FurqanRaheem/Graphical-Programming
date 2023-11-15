@@ -105,6 +105,20 @@ namespace CommandParserAssignmnet
             }
 
             /// <summary>
+            /// Verifies that the specified argument is not an empty string.
+            /// </summary>
+            /// <param name="argument"></param>
+            /// <param name="exception"></param>
+            /// <exception cref="ArgumentException"></exception>
+            public static void IsStringEmpty(string argument, Exception exception)
+            {
+                if (argument == string.Empty)
+                {
+                    throw exception;
+                }
+            }
+
+            /// <summary>
             /// Verifies that the specified arguments array has the specified length.
             /// </summary>
             /// <typeparam name="T"></typeparam>
@@ -118,6 +132,23 @@ namespace CommandParserAssignmnet
                 if (actualCount != expectedCount)
                 {
                     throw new ArgumentException($"The method '{methodName}' expects {expectedCount} arguments, but {actualCount} were provided.");
+                }
+            }
+
+            /// <summary>
+            /// Verifies that the specified arguments array has the specified length.
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            /// <param name="arguments"></param>
+            /// <param name="expectedCount"></param>
+            /// <param name="exception"></param>
+            /// <exception cref="ArgumentException"></exception>
+            public static void ValidateExactArgumentCount<T>(T[] arguments, int expectedCount, Exception exception)
+            {
+                int actualCount = arguments.Length;
+                if (actualCount != expectedCount)
+                {
+                    throw exception;
                 }
             }
 
@@ -151,6 +182,44 @@ namespace CommandParserAssignmnet
                     throw new ArgumentException($"The method '{methodName}' expects '{argumentName}' to be of type {expectedType.Name}.", methodName);
                 }
             }
+
+            public static void ParsableToType<T>(string argument, string argumentName, string methodName)
+            {
+                try
+                {
+                   T arg = (T)Convert.ChangeType(argument, typeof(T));
+                }
+                catch
+                {
+                    throw new ArgumentException($"The method '{methodName}' expects '{argumentName}' to be of type {typeof(T).Name}.", methodName);
+                }
+            }
+
+            public static void ParsableToType<T>(string argument, Exception exception)
+            {
+                try
+                {
+                    T arg = (T)Convert.ChangeType(argument, typeof(T));
+                    throw exception;
+                }
+                catch
+                {
+                    // Do nothing
+                }
+               
+            }
+            public static void NotParsableToType<T>(string argument, Exception exception)
+            {
+                try
+                {
+                    T arg = (T)Convert.ChangeType(argument, typeof(T));
+                }
+                catch
+                {
+                    throw exception;
+                }
+            }
+
 
             /// <summary>
             /// Verifies that the specified argument is a valid colour name. Matches against the KnownColor enum.
