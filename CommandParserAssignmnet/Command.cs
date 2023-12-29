@@ -43,16 +43,8 @@ namespace CommandParserAssignmnet
             #region MoveTo Argument Validation
             ThrowIf.Argument.ValidateExactArgumentCount(args, 2, "MoveTo");
 
-            // Check if argumenets are raw values or variables
-            if (variables.ContainsVariable(args[0]))
-            {
-                args[0] = variables.GetVariable(args[0]).ToString();
-            }
-
-            if (variables.ContainsVariable(args[1]))
-            {
-                args[1] = variables.GetVariable(args[1]).ToString();
-            }
+            // Variable check
+            args = ResolveArguments(args);
 
             var argumentValidator = new Dictionary<string, Dictionary<string, object>>
             {
@@ -107,6 +99,9 @@ namespace CommandParserAssignmnet
         {
             #region DrawTo Argument Validation
             ThrowIf.Argument.ValidateExactArgumentCount(args, 2, "DrawTo");
+
+            // Variable check
+            args = ResolveArguments(args);
 
             var argumentValidator = new Dictionary<string, Dictionary<string, object>>
             {
@@ -260,6 +255,9 @@ namespace CommandParserAssignmnet
             #region Circle Argument Validation
             ThrowIf.Argument.ValidateExactArgumentCount(args, 1, "circle");
 
+            // Variable check
+            args = ResolveArguments(args);
+
             var argumentValidator = new Dictionary<string, Dictionary<string, object>>
             {
                 ["Radius"] = new Dictionary<string, object>
@@ -302,6 +300,9 @@ namespace CommandParserAssignmnet
         {
             #region Rectangle Argument Validation
             ThrowIf.Argument.ValidateExactArgumentCount(args, 2, "rectangle");
+
+            // Variable check
+            args = ResolveArguments(args);
 
             var argumentValidator = new Dictionary<string, Dictionary<string, object>>
             {
@@ -347,6 +348,9 @@ namespace CommandParserAssignmnet
         {
             #region Square Argument Validation
             ThrowIf.Argument.ValidateExactArgumentCount(args, 1, "square");
+
+            // Variable check
+            args = ResolveArguments(args);
 
             var argumentValidator = new Dictionary<string, Dictionary<string, object>>
             {
@@ -412,6 +416,9 @@ namespace CommandParserAssignmnet
             {
                 throw new ArgumentException("Invalid number of arguments provided for triangle.");
             }
+
+            // Variable check
+            args = ResolveArguments(args);
 
             // Define the argument names and their corresponding types
             var argumentNames = new string[] { "SideA", "SideB", "SideC" };
@@ -493,6 +500,26 @@ namespace CommandParserAssignmnet
         /// <returns> An array of integers containing the provided arguments.</returns>
         private int[] paramsToArray(params int[] args)
         {
+            return args;
+        }
+
+        /// <summary>
+        /// Resolves arguments to their raw values if they are variables.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="variables"></param>
+        /// <returns></returns>
+        private string[] ResolveArguments(string[] args)
+        {
+            // Check if arguments are raw values or variables
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (variables.ContainsVariable(args[i]))
+                {
+                    args[i] = variables.GetVariable(args[i]).ToString();
+                }
+            }
+
             return args;
         }
     }
