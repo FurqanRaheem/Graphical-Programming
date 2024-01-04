@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Text.RegularExpressions;
 
 namespace CommandParserAssignmnet
@@ -8,13 +9,18 @@ namespace CommandParserAssignmnet
         private Form1? form1;
         private Command command;
         private Variables variables;
+        private IfStatement ifStatement;
         private Dictionary<string, Action<string[]>> commandDictionary;
-
+        private bool parseLine = true;
+        private bool storingCommands = false;
+        private int loopCount = 0;
+        private Queue<string> blockQueue = new Queue<string>();
 
         public Parser(GraphicsHandler graphicsHandler, Form1 form1)
         {
             this.command = new Command(graphicsHandler);
             this.variables = Variables.Instance;
+            this.ifStatement = new IfStatement();
             this.form1 = form1;
 
             // Create a dictionary of commands and their corresponding methods
@@ -26,6 +32,7 @@ namespace CommandParserAssignmnet
         {
             this.command = new Command(graphicsHandler);
             this.variables = Variables.Instance;
+            this.ifStatement = new IfStatement();
 
             // Create a dictionary of commands and their corresponding methods
             commandDictionary = new Dictionary<string, Action<string[]>>(StringComparer.OrdinalIgnoreCase);
@@ -93,10 +100,42 @@ namespace CommandParserAssignmnet
         {
             ThrowIf.Argument.IsStringEmpty(input, new Exception("No command entered."));
 
-            // Check for variable
-            if(input.Contains('='))
+            if (!parseLine && input.ToUpper() != "ENDIF") return;
+
+            if(storingCommands && input.ToUpper() != "ENDLOOP")
             {
-                CheckForVariableDeclaration(input);
+                blockQueue.Enqueue(input);
+                return;
+            }
+
+            if(input.StartsWith("IF"))
+            {
+                parseLine = checkForIfStatement(input);
+            }
+            else if (input.ToUpper() == "ENDIF")
+            {
+                parseLine = true;
+            }
+            else if (input.StartsWith("LOOP"))
+            {
+                loopCount = checkLoopCount(input);
+                storingCommands = true;
+            }
+            else if(input.ToUpper() == "ENDLOOP")
+            {
+                storingCommands = false;
+                for(int x = 0; x < loopCount; x++)
+                {
+                    foreach(string command in blockQueue.ToArray())
+                    {
+                        ParseLine(command);
+                    }
+                }
+               
+            }
+            else if(input.Contains('='))
+            {
+                variables.ParseDeclaration(input);
             }
             else
             {
@@ -120,30 +159,48 @@ namespace CommandParserAssignmnet
             }
         }
 
-        private void CheckForVariableDeclaration(string input)
+        private bool checkForIfStatement(string input)
         {
-            // Split input into parts
-            string[] parts = input.Split('=');
+            input = input.Replace("IF", "");
 
-            ThrowIf.Argument.ValidateExactArgumentCount(parts, 2, new Exception("Invalid variable assignment."));
-            ThrowIf.Argument.IsStringEmpty(parts[0], new Exception("Variable name cannot be empty."));
-            ThrowIf.Argument.ParsableToType<int>(parts[0], new Exception("Variable name cannot be a number."));
-            ThrowIf.Argument.NotParsableToType<int>(parts[1], new Exception("Invalid value type. Value must be an integer."));
-       
-            string variableName = parts[0].Trim().ToLower();
-            int variableValue = int.Parse(parts[1]);
+            string[] parts = input.Trim().Split(' ');
 
-            // Check if variable is already in dictionary
-            if (variables.ContainsVariable(variableName))
+            ThrowIf.Argument.ValidateExactArgumentCount(parts, 3, new Exception("Invalid if statement."));
+
+            string variableName = parts[0];
+            string comparisonOperator = parts[1];
+            int value = int.Parse(parts[2]);
+
+            if (!variables.ContainsVariable(variableName))
             {
-                // If variable is already in dictionary, update the value
-                variables.SetVariable(variableName, variableValue);
+                throw new ArgumentException($"Variable '{variableName}' not found.");
             }
-            else
+
+            // Validate and parse the value
+            if (!int.TryParse(parts[2], out value))
             {
-                // If variable is not in dictionary, add it
-                variables.AddVariable(variableName, variableValue);
+                throw new ArgumentException($"Invalid value '{parts[2]}'. It should be an integer.");
             }
+
+            // Validate the comparison operator
+            if (!new[] { ">", "<", "==", "!=", ">=", "<=" }.Contains(comparisonOperator))
+            {
+                throw new ArgumentException($"Invalid comparison operator '{comparisonOperator}'.");
+            }
+
+            // Evaluate the expression
+            return ifStatement.EvaluateExpression(variableName, comparisonOperator, value);
+
+        }
+
+        private int checkLoopCount(string input)
+        {
+            string[] parts = input.Trim().Split("LOOP");
+
+            ThrowIf.Argument.ValidateExactArgumentCount(parts, 2, new Exception("Invalid Loop expression."));
+            ThrowIf.Argument.NotParsableToType<int>(parts[1], new Exception("Invalid count type"));
+
+            return int.Parse(parts[1]);
         }
 
         /// <summary>
