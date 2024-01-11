@@ -13,15 +13,6 @@ namespace CommandParserAssignmnet
             this.variables = Variables.Instance;
         }
 
-        public void Execute(string expression, Action<string[]> action, string[] parameters)
-        {
-            /*bool result = EvaluateExpression(expression);*/
-           /* if (result)
-            {
-                action(parameters);
-            }*/
-        }
-
         public bool EvaluateExpression(string variableName, string comparisonOperator, int value)
         {
             if (variables.ContainsVariable(variableName))
@@ -48,15 +39,6 @@ namespace CommandParserAssignmnet
                 }
             }
             return false; // If expression is not in the expected format or variable not found
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="input"></param>
-        public void GetCodeBlock(string input)
-        {
-            
         }
     }
 }

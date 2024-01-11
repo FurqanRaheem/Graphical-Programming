@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CommandParserAssignmnet
 {
-    internal class Variables
+    public class Variables
     {
         private static Variables instance;
         private Dictionary<string, int> variableKeyValuePairs = new Dictionary<string, int>();
@@ -48,6 +48,11 @@ namespace CommandParserAssignmnet
         public void RemoveVariable(string variableName)
         {
             variableKeyValuePairs.Remove(variableName);
+        }
+
+        public void clearVariables()
+        {
+            variableKeyValuePairs.Clear();
         }
 
         public void ParseDeclaration(string input)
