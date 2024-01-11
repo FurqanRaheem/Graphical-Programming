@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Runtime.CompilerServices;
 
 namespace Tests
 {
@@ -10,6 +11,7 @@ namespace Tests
     {
         private GraphicsHandler graphicsHandler;
         private Parser parser;
+        private Variables variables;
 
         [TestInitialize]
         public void TestInitialize()
@@ -20,6 +22,8 @@ namespace Tests
 
             graphicsHandler = new GraphicsHandler();
             parser = new Parser(graphicsHandler);
+            variables = Variables.Instance;
+            variables.clearVariables();
         }
 
         /// <summary>
@@ -547,6 +551,150 @@ namespace Tests
             Assert.AreEqual(Color.Red, graphicsHandler.PenColour);
             Assert.AreEqual(graphicsHandler.Fill, true);
             Assert.IsTrue(BitmapHasDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
+        }
+
+
+        /// <summary>
+        /// Tests the ParseLine method for variable declaration, ensuring it correctly adds or updates a variable in the Variables class.
+        /// </summary>
+        [TestMethod]
+        public void ParseLine_VariableDeclaration_Command_ParsesCorrectly()
+        {
+            // Arrange
+            string variableDeclaration = "counter = 10";
+
+            // Act
+            parser.ParseLine(variableDeclaration);
+
+            // Assert
+            Assert.IsTrue(variables.ContainsVariable("counter"));
+            Assert.AreEqual(10, variables.GetVariable("counter"));
+        }
+
+        /// <summary>
+        /// Tests the ParseLine method for variable declaration with invalid parameters, ensuring it throws an ArgumentException.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        [DataRow("= 10")]
+        [DataRow("counter =")]
+        [DataRow("counter = ten")]
+        public void ParseLine_VariableDeclaration_Command_With_Invalid_Parameters_ThrowsArgumentException(string variableDeclaration)
+        {
+            // Act & Assert
+            parser.ParseLine(variableDeclaration);
+        }
+
+        /// <summary>
+        /// Tests the ParseLine method for updating an existing variable, ensuring it correctly modifies the variable value in the Variables class.
+        /// </summary>
+        [TestMethod]
+        public void ParseLine_VariableUpdate_Command_ParsesCorrectly()
+        {
+            // Arrange
+            variables.AddVariable("counter", 5);
+            string variableUpdate = "counter = 15";
+
+            // Act
+            parser.ParseLine(variableUpdate);
+
+            // Assert
+            Assert.IsTrue(variables.ContainsVariable("counter"));
+            Assert.AreEqual(15, variables.GetVariable("counter"));
+        }
+
+        /// <summary>
+        /// Tests the ParseProgram method for variable declaration and usage in a drawing command, ensuring it correctly updates the state.
+        /// </summary>
+        [TestMethod]
+        public void ParseProgram_VariableUsageInDrawingCommand_ParsesCorrectly()
+        {
+            // Arrange
+           string program = "size = 50\r\ncircle size";
+            // Act
+            parser.ParseProgram(program);
+
+            // Assert
+            Assert.IsTrue(variables.ContainsVariable("size"));
+            Assert.IsTrue(BitmapHasDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
+        }
+
+        /// <summary>
+        /// Tests the ParseProgram method for IF statements, ensuring it correctly evaluates the condition and executes the correct commands.
+        /// </summary>
+        [TestMethod]
+        public void ParseProgram_IfStatement_True_Evaluation()
+        {
+            // Arrange
+            string program = "size = 50\r\nIF size > 10\r\ncircle size\r\nENDIF";
+
+            // Act
+            parser.ParseProgram(program);
+
+            // Assert
+            Assert.IsTrue(variables.ContainsVariable("size"));
+            Assert.IsTrue(BitmapHasDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
+        }
+
+        /// <summary>
+        /// Tests the ParseProgram method for IF statements, ensuring it correctly evaluates the condition and executes the correct commands.
+        /// </summary>
+        [TestMethod]
+        public void ParseProgram_IfStatement_False_Evaluation()
+        {
+            string program = "size = 50\r\nIF size < 10\r\ncircle size\r\nENDIF";
+
+            parser.ParseProgram(program);
+
+            Assert.IsTrue(variables.ContainsVariable("size"));
+            Assert.IsTrue(BitmapHasNoDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
+        }
+
+        /// <summary>
+        /// Tests the ParseProgram method for IF statements with invalid parameters, ensuring it throws an Exception.
+        /// </summary>
+        /// <param name="command"></param>
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        [DataRow("IF 50")]
+        [DataRow("IF 50,50")]
+        [DataRow("IF 50,50,50")]
+        [DataRow("IF fifty")]
+        public void ParseProgram_IfStatement_With_Invalid_Parameters_ThrowsArgumentException(string command)
+        {
+            // Act & Assert
+            parser.ParseLine(command);
+        }
+
+        /// <summary>
+        /// Tests the ParseProgram method for LOOP statements, ensuring it correctly loops the specified amount and executes the commands within.
+        /// Tests by checking the fill property and the bitmap for drawing. Fill property is only set to true within the loop in the second iteration.
+        /// </summary>
+        [TestMethod]
+        public void ParseProgram_LoopStatement()
+        {
+            string program = "size = 50\r\nLOOP 2\r\nIF size < 30\r\nfill on\r\nENDIF\r\nIF size > 30 \r\nsquare 30\r\nENDIF\r\nsize = 20\r\nENDLOOP\r\n\r\nsquare 100";
+
+            parser.ParseProgram(program);
+
+            Assert.IsTrue(variables.ContainsVariable("size"));
+            Assert.IsTrue(BitmapHasDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
+            Assert.IsTrue(graphicsHandler.Fill);
+        }
+
+        /// <summary>
+        /// Tests the ParseProgram method for LOOP statements with invalid parameters, ensuring it throws an Exception.
+        /// </summary>
+        /// <param name="command"></param>
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        [DataRow("LOOP 50,50")]
+        [DataRow("LOOP 50,50,50")]
+        [DataRow("LOOP fifty")]
+        public void ParseProgram_LoopStatement_With_Invalid_Parameters_ThrowsArgumentException(string command)
+        {
+            // Act & Assert
+            parser.ParseLine(command);
         }
 
         /// <summary>
