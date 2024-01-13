@@ -7,6 +7,7 @@ namespace CommandParserAssignmnet
         GraphicsHandler graphicsHandler;
         ShapeFactory shapeFactory;
         Variables variables;
+        public bool Active { get; set; } = true;
 
         /// <summary>
         /// Constructor for the Command class.
@@ -68,6 +69,8 @@ namespace CommandParserAssignmnet
             ThrowIf.Argument.validateArguments(argumentValidator, "MoveTo");
             #endregion
 
+            if (!Active) return;
+
             // Validation passed, so we can parse the arguments
             int x = int.Parse(args[0]);
             int y = int.Parse(args[1]);
@@ -124,6 +127,8 @@ namespace CommandParserAssignmnet
             ThrowIf.Argument.validateArguments(argumentValidator, "DrawTo");
             #endregion
 
+            if (!Active) return;
+
             // Validation passed, so we can parse the arguments
             int x = int.Parse(args[0]);
             int y = int.Parse(args[1]);
@@ -148,6 +153,8 @@ namespace CommandParserAssignmnet
             ThrowIf.Argument.ValidateExactArgumentCount(args, 0, "Clear");
             #endregion
 
+            if(!Active) return;
+
             graphicsHandler.getGraphics().Clear(Globals.pictureBoxColor);
 
         }
@@ -166,6 +173,8 @@ namespace CommandParserAssignmnet
             #region Reset Argument Validation
             ThrowIf.Argument.ValidateExactArgumentCount(args, 0, "Reset");
             #endregion
+
+            if(!Active) return;
 
             graphicsHandler.X = Globals.startingX;
             graphicsHandler.Y = Globals.startingY;
@@ -186,9 +195,10 @@ namespace CommandParserAssignmnet
             ThrowIf.Argument.InvalidColour(args[0], "colour", "Pen");
             #endregion
 
+            if (!Active) return;
+
             // Validation passed, so we can parse the arguments
             Color colour = Color.FromName(args[0]);
-
             graphicsHandler.PenColour = colour;
         }
 
@@ -232,6 +242,7 @@ namespace CommandParserAssignmnet
                 ? args[0].Equals("on", StringComparison.OrdinalIgnoreCase)
                 : bool.Parse(args[0]);
 
+            if(!Active) return;
             graphicsHandler.Fill = fill;
         }
 
@@ -269,6 +280,8 @@ namespace CommandParserAssignmnet
 
             ThrowIf.Argument.validateArguments(argumentValidator, "circle");
             #endregion
+
+            if (!Active) return;
 
             // Validation passed, so we can parse the arguments
             int radius = int.Parse(args[0]);
@@ -321,6 +334,8 @@ namespace CommandParserAssignmnet
             ThrowIf.Argument.validateArguments(argumentValidator, "rectangle");
             #endregion
 
+            if (!Active) return;
+
             // Validation passed, so we can parse the arguments
             int width = int.Parse(args[0]);
             int height = int.Parse(args[1]);
@@ -363,6 +378,8 @@ namespace CommandParserAssignmnet
 
             ThrowIf.Argument.validateArguments(argumentValidator, "square");
             #endregion
+
+            if (!Active) return;
 
             // Validation passed, so we can parse the arguments
             int sideLength = int.Parse(args[0]);
@@ -438,6 +455,8 @@ namespace CommandParserAssignmnet
 
             ThrowIf.Argument.validateArguments(argumentValidator, "triangle");
             #endregion
+
+            if(!Active) return;
 
             // Validation passed, so we can parse the arguments
             Shape triangle;

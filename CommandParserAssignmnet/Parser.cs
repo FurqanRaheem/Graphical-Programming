@@ -13,8 +13,12 @@ namespace CommandParserAssignmnet
         private Dictionary<string, Action<string[]>> commandDictionary;
         private bool parseLine = true;
         private bool storingCommands = false;
+        private bool storingMethod = false;
+        private string storingMethodName = "";
+        private Queue<string> tempMethodQueue = new Queue<string>();
         private int loopCount = 0;
         private Queue<string> blockQueue = new Queue<string>();
+        private Dictionary<string, Queue<string>> methodsDictionary = new Dictionary<string, Queue<string>>();
 
         public Parser(GraphicsHandler graphicsHandler, Form1 form1)
         {
@@ -66,8 +70,13 @@ namespace CommandParserAssignmnet
         /// This method takes the provided program text and splits it into individual lines based on carriage return and line feed characters. It then processes each line using the <see cref="ParseLine"/> method.
         /// </remarks>
         /// <param name="programText">The text of the program to be parsed.</param>
-        public void ParseProgram(string programText)
+        public void ParseProgram(string programText, bool syntaxCheck = false)
         {
+            if(syntaxCheck)
+            {
+                command.Active = false;
+            }
+
             string[] lines = programText.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string line in lines)
@@ -84,6 +93,8 @@ namespace CommandParserAssignmnet
                     form1.Refresh();
                 }
             }
+
+            command.Active = true;
         }
 
         /// <summary>
@@ -106,6 +117,21 @@ namespace CommandParserAssignmnet
             {
                 blockQueue.Enqueue(input);
                 return;
+            }
+
+            if(storingMethod && input.ToUpper() != "ENDMETHOD")
+            {
+                tempMethodQueue.Enqueue(input);
+                return;
+            }
+
+            if(methodsDictionary.ContainsKey(input))
+            {
+                Queue<string> commands = methodsDictionary[input];
+                foreach (string line in commands)
+                {
+                    ParseLine(line);
+                }
             }
 
             if(input.StartsWith("IF"))
@@ -131,7 +157,23 @@ namespace CommandParserAssignmnet
                         ParseLine(command);
                     }
                 }
-               
+            }
+            else if (input.ToUpper().StartsWith("METHOD"))
+            {
+                string[] parts = input.Trim().Split(" ");
+
+                ThrowIf.Argument.ValidateExactArgumentCount(parts, 2, new Exception("Invalid Method Declaration"));
+
+                storingMethodName = parts[1];
+                methodsDictionary.Add(storingMethodName, new Queue<string>());
+                storingMethod = true;
+            }
+            else if(input.Equals("ENDMETHOD"))
+            {
+                storingMethod = false;
+                methodsDictionary[storingMethodName] = tempMethodQueue;
+                tempMethodQueue.Clear();
+
             }
             else if(input.Contains('='))
             {
