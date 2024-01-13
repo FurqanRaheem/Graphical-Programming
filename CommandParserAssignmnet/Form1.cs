@@ -283,5 +283,24 @@ namespace CommandParserAssignmnet
         {
             TxtBoxProgramText = txtBox_Program.Text;
         }
+
+        /// <summary>
+        /// Handles the Click event of the btnSyntax_Program control. Doesn't run the program, just checks the syntax.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSyntax_Program_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string programText = txtBox_Program.Text;
+                parser.ParseProgram(programText, true);
+                MessageBox.Show(Text = "Syntax check successful.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }
