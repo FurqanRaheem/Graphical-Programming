@@ -698,6 +698,34 @@ namespace Tests
         }
 
         /// <summary>
+        /// Tests the syntax checker functionality, doesn't execute any commands
+        /// </summary>
+        [TestMethod]
+        public void ParseProgam_SyntaxCheck()
+        {
+            string program = "size = 50\r\nLOOP 2\r\nIF size < 30\r\nfill on\r\nENDIF\r\nIF size > 30 \r\nsquare 30\r\nENDIF\r\nsize = 20\r\nENDLOOP\r\n\r\nsquare 100";
+
+            parser.ParseProgram(program, true);
+
+            Assert.IsTrue(BitmapHasNoDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
+            Assert.IsFalse(graphicsHandler.Fill);
+        }
+
+        /// <summary>
+        /// Tests that an execption is thrown when the syntax checker encounters an invalid command
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ParseProgram_SyntaxCheck_InvalidCommand()
+        {
+            string program = "size = 50\r\nLOOP 2\r\nIF size < 30\r\nfill on\r\nENDIF\r\nIF size > 30 \r\nsquare 30\r\nENDIF\r\nsize = 20\r\nENDLOOP\r\n\r\nsquare 100\r\ninvalid";
+
+            parser.ParseProgram(program, true);
+        }
+
+
+
+        /// <summary>
         /// Helper method to check if a Bitmap contains any drawing (pixels with the specified penColor).
         /// </summary>
         /// <param name="bitmap">The Bitmap to check.</param>
