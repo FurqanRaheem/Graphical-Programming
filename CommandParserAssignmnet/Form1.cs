@@ -299,7 +299,7 @@ namespace CommandParserAssignmnet
             }
             catch(Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                listBox1.Items.Add($"{ex.Message}");
             }
         }
     }
