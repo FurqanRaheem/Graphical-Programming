@@ -19,6 +19,7 @@ namespace CommandParserAssignmnet
         private int loopCount = 0;
         private Queue<string> blockQueue = new Queue<string>();
         private Dictionary<string, Queue<string>> methodsDictionary = new Dictionary<string, Queue<string>>();
+        private Dictionary<string, int> methodParams = new Dictionary<string, int>();
 
         public Parser(GraphicsHandler graphicsHandler, Form1 form1)
         {
@@ -125,14 +126,21 @@ namespace CommandParserAssignmnet
                 return;
             }
 
-            if(methodsDictionary.ContainsKey(input))
+            // Check method call
+            if(input.EndsWith("()"))
             {
-                Queue<string> commands = methodsDictionary[input];
-                foreach (string line in commands)
+                if (methodsDictionary.ContainsKey(input))
                 {
-                    ParseLine(line);
+                    Queue<string> commands = methodsDictionary[input];
+                    foreach (string line in commands)
+                    {
+                        ParseLine(line);
+                    }
+                    return;
                 }
-            }
+
+                throw new Exception("Method not found");
+            }   
 
             if(input.StartsWith("IF"))
             {
@@ -165,13 +173,17 @@ namespace CommandParserAssignmnet
                 ThrowIf.Argument.ValidateExactArgumentCount(parts, 2, new Exception("Invalid Method Declaration"));
 
                 storingMethodName = parts[1];
+                if(methodsDictionary.ContainsKey(storingMethodName))
+                {
+                    throw new Exception("Method name already declared");
+                }
                 methodsDictionary.Add(storingMethodName, new Queue<string>());
                 storingMethod = true;
             }
             else if(input.Equals("ENDMETHOD"))
             {
                 storingMethod = false;
-                methodsDictionary[storingMethodName] = tempMethodQueue;
+                methodsDictionary[storingMethodName] = new Queue<string>(tempMethodQueue);
                 tempMethodQueue.Clear();
 
             }
@@ -201,6 +213,12 @@ namespace CommandParserAssignmnet
             }
         }
 
+        /// <summary>
+        /// Parses the if statement and evaluates expression
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         private bool checkForIfStatement(string input)
         {
             input = input.Replace("IF", "");
@@ -235,14 +253,32 @@ namespace CommandParserAssignmnet
 
         }
 
+        /// <summary>
+        /// Works out the amount of times the loop has to repeat, can be a raw int value or variable
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         private int checkLoopCount(string input)
         {
-            string[] parts = input.Trim().Split("LOOP");
+            string[] parts = input.Trim().Split(" ");
 
             ThrowIf.Argument.ValidateExactArgumentCount(parts, 2, new Exception("Invalid Loop expression."));
-            ThrowIf.Argument.NotParsableToType<int>(parts[1], new Exception("Invalid count type"));
 
-            return int.Parse(parts[1]);
+            if (int.TryParse(parts[1], out int number))
+            {
+                return int.Parse(parts[1]);
+            }
+            else
+            {
+                if (variables.ContainsVariable(parts[1]))
+                {
+                    return variables.GetVariable(parts[1]);
+
+                }
+
+                throw new Exception("Invalid loop variable");
+            }
         }
 
         /// <summary>
