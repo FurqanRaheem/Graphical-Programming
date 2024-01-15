@@ -671,9 +671,11 @@ namespace Tests
         /// Tests by checking the fill property and the bitmap for drawing. Fill property is only set to true within the loop in the second iteration.
         /// </summary>
         [TestMethod]
-        public void ParseProgram_LoopStatement()
+        [DataRow("size")]
+        [DataRow("2")]
+        public void ParseProgram_LoopStatement(string count)
         {
-            string program = "size = 50\r\nLOOP 2\r\nIF size < 30\r\nfill on\r\nENDIF\r\nIF size > 30 \r\nsquare 30\r\nENDIF\r\nsize = 20\r\nENDLOOP\r\n\r\nsquare 100";
+            string program = "size = 50\r\nLOOP " + count + "\r\nIF size < 30\r\nfill on\r\nENDIF\r\nIF size > 30 \r\nsquare 30\r\nENDIF\r\nsize = 20\r\nENDLOOP\r\n\r\nsquare 100";
 
             parser.ParseProgram(program);
 
@@ -723,6 +725,30 @@ namespace Tests
             parser.ParseProgram(program, true);
         }
 
+        /// <summary>
+        /// Test method for the "METHOD" command, ensuring it correctly parses and executes a method with multiple commands.
+        /// </summary>
+        public void ParseProgram_Methods()
+        {
+            string program = "METHOD testMethod\r\nsquare 20\r\n \r\nENDMETHOD\r\ntestMethod()";
+
+            parser.ParseProgram(program);
+
+            Assert.IsTrue(BitmapHasDrawing(graphicsHandler.getBitmap(), graphicsHandler.PenColour));
+        }
+
+        /// <summary>
+        /// Test method for the "METHOD" command with invalid parameters, ensuring it throws an Exception.
+        /// </summary>
+        /// <param name="program"></param>
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        [DataRow("METHOD testMethod\r\nsquare 40,40\r\nENDMETHOD\r\ntestMethod()\r\n")]
+        [DataRow("METHOD\r\nsquare 40\r\nENDMETHOD\r\ntestMethod()\r\n")]
+        public void ParseProgram_Methods_InvalidCommand(string program)
+        {
+            parser.ParseProgram(program);
+        }
 
 
         /// <summary>
